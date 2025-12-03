@@ -33,3 +33,12 @@ class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'})
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    """Serializer for user profile"""
+    role_name = serializers.CharField(source='role.name', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'middle_name', 'role_name', 'created_at']
+        read_only_fields =['id', 'email', 'role_name', 'created_at']
+
