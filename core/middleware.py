@@ -57,3 +57,18 @@ class TokenAuthMiddleware(MiddlewareMixin):
             request.user = None
 
         return None
+
+class PermissionMiddleware(MiddlewareMixin):
+    """Middleware for checking permissions"""
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        """if view required auth, but user not found"""
+        if hasattr(view_func, 'permission_classes'):
+            user = getattr(view_func, 'user', None)
+
+            if not user or not user.is_authenticated:
+                for permission_class in view_func.permission_classes:
+                    permission = permission_class()
+                    if hasattr(permission, 'requires_authentication') and permission.requires_authentication:
+                        return JsonResponse({'error': 'Authentication required'}, status=401)
+        return None
