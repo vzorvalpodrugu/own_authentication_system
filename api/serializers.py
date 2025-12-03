@@ -42,3 +42,19 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'first_name', 'last_name', 'middle_name', 'role_name', 'created_at']
         read_only_fields =['id', 'email', 'role_name', 'created_at']
 
+class BusinessElementSerializer(serializers.ModelSerializer):
+    """Serializer for business element"""
+    class Meta:
+        model = BusinessElement
+        fields = ['id', 'name', 'description', 'table_name', 'created_at']
+
+
+class AccessRuleSerializer(serializers.ModelSerializer):
+    """Serializer for access rule"""
+    role_name = serializers.CharField(source='role.name', read_only=True)
+    element_name = serializers.CharField(source='element.name', read_only=True)
+
+    class Meta:
+        model = AccessRule
+        fields = '__all__'
+
